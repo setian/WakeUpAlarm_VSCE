@@ -2,11 +2,12 @@
   "name": "wakeup-alarm",
   "displayName": "Wake Up Alarm",
   "description": "Alerts the user when a key is pressed repeatedly.",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "publisher": "Nahceskrap",
+  "icon": "media/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/wakeup-alarm.git"
+    "url": "https://github.com/setian/WakeUpAlarm_VSCE.git"
   },
   "engines": {
     "vscode": "^1.85.0"
@@ -15,7 +16,7 @@
     "Other"
   ],
   "activationEvents": [
-    "*"
+    "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {

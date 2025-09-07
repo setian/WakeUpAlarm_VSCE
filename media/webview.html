@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wake Up!</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 10px;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        img {
+            max-width: 90%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+        #timer {
+            font-size: 2.5em;
+            margin-top: 20px;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <img id="alarm-image" alt="Wake up call">
+    <div id="timer">00:00:00:00</div>
+    <audio id="alarm-sound" autoplay></audio>
+    <script>
+        const audio = document.getElementById('alarm-sound');
+        const image = document.getElementById('alarm-image');
+        let playCount = 0;
+        let intervalId = null;
+
+        function playSound() {
+            if (playCount >= 3) {
+                if (intervalId) clearInterval(intervalId);
+                return;
+            }
+            audio.currentTime = 0;
+            audio.play().catch(error => {
+                console.error("Audio play failed:", error);
+                if (intervalId) clearInterval(intervalId);
+            });
+            playCount++;
+        }
+
+        audio.addEventListener('canplaythrough', () => {
+            if (!intervalId) { 
+                intervalId = setInterval(playSound, 600);
+            }
+        });
+
+        const timerElement = document.getElementById('timer');
+        let startTime = Date.now();
+
+        function formatTime(ms) {
+            const hours = Math.floor(ms / 3600000);
+            const minutes = Math.floor((ms % 3600000) / 60000);
+            const seconds = Math.floor((ms % 60000) / 1000);
+            const milliseconds = Math.floor((ms % 1000) / 10);
+
+            return [
+                hours.toString().padStart(2, '0'),
+                minutes.toString().padStart(2, '0'),
+                seconds.toString().padStart(2, '0'),
+                milliseconds.toString().padStart(2, '0')
+            ].join(':');
+        }
+
+        function updateTimer() {
+            const elapsedTime = Date.now() - startTime;
+            timerElement.textContent = formatTime(elapsedTime);
+            requestAnimationFrame(updateTimer);
+        }
+
+        requestAnimationFrame(updateTimer);
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if (!intervalId) {
+                    intervalId = setInterval(playSound, 600);
+                }
+            }, 100);
+        });
+
+        window.addEventListener('message', event => {
+            const message = event.data;
+            switch (message.command) {
+                case 'stopSound':
+                    if (intervalId) {
+                        clearInterval(intervalId);
+                    }
+                    audio.pause();
+                    audio.currentTime = 0;
+                    break;
+                case 'updateMedia':
+                    image.src = message.imageUri;
+                    audio.src = message.soundUri;
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>

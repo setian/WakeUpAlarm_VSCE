@@ -115,84 +115,19 @@ function playAlarmSound(context: vscode.ExtensionContext) {
     const webviewSoundUri = webviewPanel.webview.asWebviewUri(soundFileUri);
     const webviewImageUri = webviewPanel.webview.asWebviewUri(imagePath);
 
-    webviewPanel.webview.html = getWebviewContent(webviewSoundUri.toString(), webviewImageUri.toString());
+    webviewPanel.webview.html = getWebviewContent(context);
+    webviewPanel.webview.postMessage({
+        command: 'updateMedia',
+        imageUri: webviewImageUri.toString(),
+        soundUri: webviewSoundUri.toString()
+    });
 }
 
-function getWebviewContent(soundUri: string, imageUri: string): string {
-    return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wake Up!</title>
-    <style>
-        body {
-            background-color: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-        img {
-            max-width: 95%;
-            max-height: 95vh;
-            object-fit: contain;
-        }
-    </style>
-</head>
-<body>
-    <img src="${imageUri}" alt="Wake up call">
-    <audio id="alarm-sound" src="${soundUri}" autoplay></audio>
-    <script>
-        const audio = document.getElementById('alarm-sound');
-        let playCount = 0;
-        let intervalId = null;
+function getWebviewContent(context: vscode.ExtensionContext): string {
+    const htmlPath = vscode.Uri.joinPath(context.extensionUri, 'media', 'webview.html');
+    let htmlContent = fs.readFileSync(htmlPath.fsPath, 'utf8');
 
-        function playSound() {
-            if (playCount >= 3) {
-                if (intervalId) clearInterval(intervalId);
-                return;
-            }
-            audio.currentTime = 0;
-            audio.play().catch(error => {
-                console.error("Audio play failed:", error);
-                if (intervalId) clearInterval(intervalId);
-            });
-            playCount++;
-        }
-
-        audio.addEventListener('canplaythrough', () => {
-            if (!intervalId) { 
-                intervalId = setInterval(playSound, 600);
-            }
-        });
-
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                if (!intervalId) {
-                    intervalId = setInterval(playSound, 600);
-                }
-            }, 100);
-        });
-
-        window.addEventListener('message', event => {
-            const message = event.data;
-            switch (message.command) {
-                case 'stopSound':
-                    if (intervalId) {
-                        clearInterval(intervalId);
-                    }
-                    audio.pause();
-                    audio.currentTime = 0;
-                    break;
-            }
-        });
-    </script>
-</body>
-</html>`;
+    return htmlContent;
 }
 
 export function deactivate() {}
