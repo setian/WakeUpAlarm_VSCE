@@ -1,0 +1,61 @@
+{
+  "name": "wakeup-alarm",
+  "displayName": "Wake Up Alarm",
+  "description": "Alerts the user when a key is pressed repeatedly.",
+  "version": "0.0.1",
+  "publisher": "Nahceskrap",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/wakeup-alarm.git"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "wakeupAlarm.testAlarm",
+        "title": "Wake Up: Test Alarm"
+      }
+    ],
+    "configuration": {
+      "title": "Wake Up Alarm",
+      "properties": {
+        "wakeupAlarm.triggerCount": {
+          "type": "number",
+          "default": 20,
+          "description": "Number of repeated key presses to trigger the alarm."
+        },
+        "wakeupAlarm.excludedKeys": {
+          "type": "array",
+          "default": [
+            "<delete>"
+          ],
+          "description": "A list of actions to ignore. To ignore character deletion (Backspace, Delete), use the special keyword '<delete>'. To ignore a character like 'a', add 'a' as an item.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run esbuild-base -- --minify",
+    "compile": "npm run esbuild-base -- --sourcemap",
+    "watch": "npm run esbuild-base -- --sourcemap --watch",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node"
+  },
+  "devDependencies": {
+    "@types/node": "18.x",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.19.11",
+    "typescript": "^5.3.3"
+  }
+}
