@@ -21,3 +21,7 @@ A simple VS Code extension to alert you when you might be falling asleep at the 
 Due to the way Input Method Editors (IMEs) compose characters, the extension may count repeated characters faster than intended. For example, typing 10 identical Korean characters may be counted as 20 repeats by the extension, triggering the alarm prematurely.
 
 This is a known limitation, and we are looking into more robust ways to handle character input from various language sources.
+
+## Contributing
+
+This project was created by [setian](https://github.com/setian).
