@@ -2,7 +2,7 @@
   "name": "wakeup-alarm",
   "displayName": "Wake Up Alarm",
   "description": "Alerts the user when a key is pressed repeatedly.",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "publisher": "Nahceskrap",
   "icon": "media/icon.png",
   "repository": {
