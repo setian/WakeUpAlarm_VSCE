@@ -2,6 +2,8 @@
 
 A simple VS Code extension to alert you when you might be falling asleep at the keyboard.
 
+![Wake Up Alarm Demo](media/demo.gif)
+
 ## Features
 
 - Monitors key presses to detect long strings of the same character being repeated.
