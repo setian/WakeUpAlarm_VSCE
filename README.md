@@ -14,6 +14,10 @@ A simple VS Code extension to alert you when you might be falling asleep at the 
 2.  Make sure you have a sound file named `alarm.mp3` or `alarm.wav` inside a `media` folder in your extension's installation directory.
 3.  The extension will automatically monitor your typing.
 
+## Important Notes
+
+- If your computer is on mute or the volume is too low, you may not hear the alarm sound.
+
 ## Known Issues
 
 ### IME Language Support (Korean, Japanese, Chinese, etc.)
